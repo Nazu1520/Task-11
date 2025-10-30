@@ -1,0 +1,75 @@
+import org.openqa.selenium.By;
+
+import org.openqa.selenium.WebDriver;
+
+import org.openqa.selenium.WebElement;
+
+import org.openqa.selenium.chrome.ChromeDriver;
+
+import java.util.Set;
+ 
+public class WindowHandling {
+
+    public static void main(String[] args) {
+
+        WebDriver driver = new ChromeDriver();
+ 
+        try {
+
+            driver.manage().window().maximize();
+
+            driver.get("https://the-internet.herokuapp.com/windows");
+ 
+            String originalWindow = driver.getWindowHandle();
+ 
+            WebElement clickHereButton = driver.findElement(By.xpath("//a[text()='Click Here']"));
+
+            clickHereButton.click();
+ 
+            Set<String> allWindows = driver.getWindowHandles();
+
+            for (String window : allWindows) {
+
+                if (!window.equals(originalWindow)) {
+
+                    driver.switchTo().window(window);
+
+                    break;
+
+                }
+
+            }
+ 
+            WebElement newWindowText = driver.findElement(By.xpath("//h3[text()='New Window']"));
+
+            if (newWindowText.isDisplayed()) {
+
+                System.out.println("New window text verified.");
+
+            }
+ 
+            driver.close();
+
+            driver.switchTo().window(originalWindow);
+ 
+            if (driver.getTitle().contains("The Internet")) {
+
+                System.out.println("Original window is active.");
+
+            }
+ 
+        } catch (Exception e) {
+
+            System.out.println("Error: " + e.getMessage());
+
+        } finally {
+
+            driver.quit();
+
+        }
+
+    }
+
+}
+
+ 
